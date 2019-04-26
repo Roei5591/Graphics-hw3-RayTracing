@@ -4,7 +4,44 @@
   "antiAliasingFactor": 1,
   "renderRefarctions": true,
   "renderReflections": true,
-  "camera": {},
+  "camera": {
+    "cameraPosition": {
+      "x": 0.0,
+      "y": 6.0,
+      "z": 1.0
+    },
+    "centerPoint": {
+      "x": 0.0,
+      "y": 4.4,
+      "z": 0.6
+    },
+    "towardsVec": {
+      "x": 0.0,
+      "y": -0.9701425001453319,
+      "z": -0.24253562503633297
+    },
+    "upVec": {
+      "x": 0.0,
+      "y": -0.5,
+      "z": 0.5
+    },
+    "rightVec": {
+      "x": -0.5,
+      "y": -0.0,
+      "z": 0.0
+    },
+    "UpHatVec": {
+      "x": 0.0,
+      "y": -0.1,
+      "z": 0.4
+    },
+    "distanceToPlain": 2.0,
+    "viewPlainWidth": 0.0,
+    "ratio": 0.0,
+    "imageResolution": 0,
+    "width": 0,
+    "height": 0
+  },
   "ambient": {
     "x": 0.0,
     "y": 0.0,

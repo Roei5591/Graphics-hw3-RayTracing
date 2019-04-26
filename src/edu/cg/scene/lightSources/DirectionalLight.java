@@ -1,5 +1,6 @@
 package edu.cg.scene.lightSources;
 
+import edu.cg.algebra.Hit;
 import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
@@ -28,19 +29,23 @@ public class DirectionalLight extends Light {
 	@Override
 	public Ray rayToLight(Point fromPoint) {
 		// TODO Auto-generated method stub
-		return null;
+		return new Ray(fromPoint , direction.neg());
 	}
 
 	@Override
 	public boolean isOccludedBy(Surface surface, Ray rayToLight) {
 		// TODO Auto-generated method stub
-		return false;
+        Hit hitSurface = surface.intersect(rayToLight);
+        if( hitSurface != null ){
+            return true;
+        }
+        return false;
 	}
 
 	@Override
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
 		// TODO Auto-generated method stub
-		return null;
+		return new Vec(intensity);
 	}
 	
 	//TODO: add some methods

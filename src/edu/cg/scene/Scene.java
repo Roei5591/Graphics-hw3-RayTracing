@@ -190,52 +190,55 @@ public class Scene {
 		//       This is the recursive method in RayTracing.
         if(recusionLevel == 0) return new Vec();
 
-        double minT = Double.MAX_EXPONENT;
-        Surface closestSurface = null;
-        Hit minHit = null;
      //   Comparator<Hit> comparator = Comparator.comparing( Hit::t );
        // surfaces.stream().filter(surface -> surface.intersect(ray) != null ).min( intersect(ray).t());
-        //TODO good to have
-
-        //Find Closest hitting point
-		for (Surface surface : surfaces) {
-		    Hit hitOfSurface = surface.intersect(ray) ;
-		    if(hitOfSurface != null && hitOfSurface.t() < minT){
-                minT = hitOfSurface.t();
-                closestSurface = surface;
-                minHit = hitOfSurface;
-            }
-		}
+        //TODO good to have - make lambda instead of code
+		Hit minHit = getMinHit(ray);
 
 		if(minHit == null) return backgroundColor;
-        Point pointOfClosestHit = ray.add(minT);
+        Point pointOfClosestHit = ray.add(minHit.t());
 
 		//calculate it's color
         Vec I = new Vec();
         //I.add(Ie) TODO Ie
-        I.add(closestSurface.Ka().mult(ambient)); //Ka* Iamb
+        I.add(minHit.getSurface().Ka().mult(ambient)); //Ka* Iamb
 
         for (Light lightSource : lightSources) {
             Ray shadowRay = lightSource.rayToLight(pointOfClosestHit);
             if(!surfaces.stream().allMatch(x -> lightSource.isOccludedBy(x, shadowRay))){
-                Vec calculateLightDependent = CalculateLightDependent(ray, closestSurface, minHit, shadowRay);
+                Vec calculateLightDependent = CalculateLightDependent(ray, minHit.getSurface(), minHit, shadowRay);
                 I.add(calculateLightDependent.mult(lightSource.intensity(pointOfClosestHit,shadowRay)));
             }
         }
 
-        Vec Ir = calcColor(null,recusionLevel - 1);
-        double kr = closestSurface.reflectionIntensity();
-        I.add(Ir.mult(kr));
+        //Vec Ir = calcColor(null,recusionLevel - 1);
+        //double kr = closestSurface.reflectionIntensity();
+        //I.add(Ir.mult(kr));
 
-        Vec It = calcColor(null,recusionLevel - 1);
-        double kt = closestSurface.isTransparent()?closestSurface.refractionIntensity() :0;
-        I.add(It.mult(kt));
+        //Vec It = calcColor(null,recusionLevel - 1);
+        //double kt = closestSurface.isTransparent()?closestSurface.refractionIntensity() :0;
+        //I.add(It.mult(kt));
 
         return I;
 
 	}
 
-    private Vec CalculateLightDependent(Ray ray, Surface closestSurface, Hit minHit, Ray shadowRay) {
+	public Hit getMinHit(Ray ray) {
+		//Find Closest hitting point
+		Hit minHit = null;
+		double minT = Double.MAX_EXPONENT;
+		for (Surface surface : surfaces) {
+		    Hit hitOfSurface = surface.intersect(ray) ;
+		    if(hitOfSurface != null && hitOfSurface.t() < minT){
+                minT = hitOfSurface.t();
+                minHit = hitOfSurface;
+                minHit.setSurface(surface);
+            }
+		}
+		return minHit;
+	}
+
+	private Vec CalculateLightDependent(Ray ray, Surface closestSurface, Hit minHit, Ray shadowRay) {
         Vec diffue = closestSurface.Kd().mult(minHit.getNormalToSurface().dot(shadowRay.direction()));
         Vec R = ray.direction().add((minHit.getNormalToSurface()
                 .mult(2 * (ray.direction().neg().dot(minHit.getNormalToSurface())))).neg());

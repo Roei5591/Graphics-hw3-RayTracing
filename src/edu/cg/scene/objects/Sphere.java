@@ -40,7 +40,7 @@ public class Sphere extends Shape {
 		// TODO: implement this method. done
 		Point sourcePoint = ray.source(); //p
 		Vec directionVec = ray.direction(); //d
-		Vec projectFromCenter = sourcePoint.sub(center);//
+		Vec projectFromCenter = sourcePoint.sub(center);// pc
 
 		//sourcePoint + (directionVec.projectFromCenter) * directionVec
 		//http://www.lighthouse3d.com/tutorials/maths/ray-sphere-intersection/
@@ -71,26 +71,30 @@ public class Sphere extends Shape {
 
 				Vec normalToSphere = intersection.sub(center).normalize();
 				hit = new Hit(t,normalToSphere);
+				hit.setWithin();
 			}
 		}
 		else // center of sphere projects on the ray
 		{
 			if (disOfRayFromCenter <= radius)
 			{
-
+				boolean isWithin;
 				if (sourceToCenterVec.length() > radius) // source point is outside the sphere
 				{
 					t = sourcePoint.dist(pc) - dist;
+					isWithin = false;
 				}
 				else // source point is inside or on the sphere
 				{
 					t = sourcePoint.dist(pc) + dist;
+					isWithin = true;
 				}
 
 				// intersetionPoint = sourcePoint + t * directionVe
 				intersection = sourcePoint.add( directionVec.mult(t));
 				Vec normalToSphere = intersection.sub(center).normalize();
 				hit = new Hit(t,normalToSphere);
+				hit.setIsWithin(isWithin);
 			}
 		}
 

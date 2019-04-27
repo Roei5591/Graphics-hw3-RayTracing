@@ -178,6 +178,7 @@ public class Scene {
 			Point centerPoint = camera.transform(x, y);
 			Ray ray = new Ray(camera.getCameraPosition(), centerPoint);
 			Vec color = calcColor(ray, maxRecursionLevel );
+			
 			return color.toColor();
 		});
 	}
@@ -198,21 +199,25 @@ public class Scene {
 		//calculate it's color
         Vec I = new Vec();
         //I.add(Ie) TODO Ie
-        I = I.add(minHit.getSurface().Ka().mult(ambient)); //Ka* Iamb
+        Vec a = minHit.getSurface().Ka();
+        Vec b = a.mult(ambient);
+        I = I.add(b); //Ka* Iamb
 
         for (Light lightSource : lightSources) {
             Ray shadowRay = lightSource.rayToLight(pointOfClosestHit);
             if(surfaces.stream().allMatch(x -> !lightSource.isOccludedBy(x, shadowRay))){
-                Vec calculateLightDependent = CalculateLightDependent(ray, minHit.getSurface(), minHit, shadowRay);
-                I = I.add(calculateLightDependent.mult(lightSource.intensity(pointOfClosestHit,shadowRay)));
+                Vec calculateLightDependent = CalculateLightDependent(ray, minHit, shadowRay);
+                Vec Il = lightSource.intensity(pointOfClosestHit,shadowRay);
+                Vec LightSpecificVector = calculateLightDependent.mult(Il);
+                I = I.add(LightSpecificVector);
             }
         }
 
 
 		Vec Ir = GetReflectionIntensity(ray, recusionLevel, minHit);
 		double kr = minHit.getSurface().reflectionIntensity();
-		Vec a = Ir.mult(kr);
-        I = I.add(a);
+		Vec c = Ir.mult(kr);
+        I = I.add(c);
 
         if(minHit.getSurface().isTransparent()){
 			Vec It = GetRefractionIntensity(ray, recusionLevel, minHit);
@@ -249,11 +254,18 @@ public class Scene {
 		return minHit;
 	}
 
-	private Vec CalculateLightDependent(Ray ray, Surface closestSurface, Hit minHit, Ray shadowRay) {
-        Vec diffue = closestSurface.Kd().mult(minHit.getNormalToSurface().dot(shadowRay.direction()));
-        Vec R = ray.direction().add((minHit.getNormalToSurface()
-                .mult(2 * (ray.direction().neg().dot(minHit.getNormalToSurface())))).neg());
-        Vec speclar = closestSurface.Ks().mult(Math.pow(ray.inverse().direction().dot(R), closestSurface.shininess()));
+	private Vec CalculateLightDependent(Ray ray, Hit minHit, Ray shadowRay) {
+	    Vec Kd = minHit.getSurface().Kd();
+	    Vec N = minHit.getNormalToSurface();
+	    Vec L = shadowRay.direction();
+        Vec diffue = Kd.mult(N.dot(L));
+
+        Vec Ks = minHit.getSurface().Ks();
+        Vec V = ray.direction().neg();
+        //Vec R = Ops.reflect(shadowRay.direction().neg(), minHit.getNormalToSurface());
+        Vec R = Ops.reflect(shadowRay.direction(), minHit.getNormalToSurface());
+        Vec speclar = Ks.mult(Math.pow(V.dot(R),  minHit.getSurface().shininess()));
+
         return diffue.add(speclar);
     }
 }

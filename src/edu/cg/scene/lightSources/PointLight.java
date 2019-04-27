@@ -64,6 +64,7 @@ public class PointLight extends Light {
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
 		// TODO Auto-generated method stub done
 		double distance = position.dist(rayToLight.source());
+		//double distance = position.dist(hittingPoint);
 		double Fatt = kq * Math.pow(distance, 2) + kl * distance + kc;
 		Vec IL = intensity.mult(1.0 /Fatt);
 		return IL;

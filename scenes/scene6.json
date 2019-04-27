@@ -8,17 +8,17 @@
     "cameraPosition": {
       "x": 0.0,
       "y": 6.0,
-      "z": 100.0
+      "z": 1.0
     },
     "centerPoint": {
       "x": 0.0,
       "y": 4.4,
-      "z": 69.6
+      "z": 0.6
     },
     "towardsVec": {
       "x": 0.0,
-      "y": -0.052558833122763673,
-      "z": -0.9986178293325096
+      "y": -0.9701425001453319,
+      "z": -0.24253562503633297
     },
     "upVec": {
       "x": 0.0,
@@ -26,14 +26,14 @@
       "z": 0.5
     },
     "rightVec": {
-      "x": -8.0,
+      "x": -0.5,
       "y": -0.0,
       "z": 0.0
     },
     "UpHatVec": {
       "x": 0.0,
-      "y": -121.6,
-      "z": 6.4
+      "y": -0.1,
+      "z": 0.4
     },
     "distanceToPlain": 2.0,
     "viewPlainWidth": 0.0,
@@ -52,7 +52,26 @@
     "y": 0.5,
     "z": 1.0
   },
-  "lightSources": [],
+  "lightSources": [
+    {
+      "CLASSNAME": "edu.cg.scene.lightSources.PointLight",
+      "DATA": {
+        "position": {
+          "x": 2.5,
+          "y": 0.0,
+          "z": 1.0
+        },
+        "kq": 0.1,
+        "kl": 0.05,
+        "kc": 1.0,
+        "intensity": {
+          "x": 0.9,
+          "y": 0.9,
+          "z": 0.9
+        }
+      }
+    }
+  ],
   "surfaces": [
     {
       "shape": {

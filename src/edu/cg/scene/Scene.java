@@ -178,7 +178,7 @@ public class Scene {
 			Point centerPoint = camera.transform(x, y);
 			Ray ray = new Ray(camera.getCameraPosition(), centerPoint);
 			Vec color = calcColor(ray, maxRecursionLevel );
-			
+
 			return color.toColor();
 		});
 	}

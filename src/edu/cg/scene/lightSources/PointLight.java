@@ -65,10 +65,15 @@ public class PointLight extends Light {
 		// TODO Auto-generated method stub done
 		double distance = position.dist(rayToLight.source());
 		//double distance = position.dist(hittingPoint);
-		double Fatt = kq * Math.pow(distance, 2) + kl * distance + kc;
+		double Fatt = getFatt(distance);
 		Vec IL = intensity.mult(1.0 /Fatt);
 		return IL;
 	}
 
+	protected double getFatt(double distance) {
+		return kq * Math.pow(distance, 2) + kl * distance + kc;
+	}
+
 	//TODO: add some methods done
+
 }

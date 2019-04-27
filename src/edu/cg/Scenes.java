@@ -160,17 +160,17 @@ public class Scenes {
 		Surface plainSurface = new Surface(plainShape,plainMaterial);
 		//Light dirLight = new DirectionalLight().initDirection(new Vec(0.0, 0.0, -1.0))
 		//		.initIntensity(new Vec(0.5));
-		Light pointLight = new PointLight().initIntensity(new Vec(0.9)).
-			initPosition(new Point(2.5, 0.0, 1.0)).initDecayFactors(0.1, 0.05, 1.0);
-		//Light spotLight = new Spotlight().initIntensity(new Vec(0.9)).
-				//initPosition(new Point(-2.5, 0.0, 1.0)).initDecayFactors(0.1, 0.05, 1.0)
-				//.initDirection(new Vec(-0.1,-0.1,-0.1));
+		//Light pointLight = new PointLight().initIntensity(new Vec(0.9)).
+		//	initPosition(new Point(2.5, 0.0, 1.0)).initDecayFactors(0.1, 0.05, 1.0);
+		Light spotLight = new Spotlight().initIntensity(new Vec(0.9)).
+				initPosition(new Point(-2.5, 0.0, 1.0)).initDecayFactors(0.1, 0.05, 1.0)
+				.initDirection(new Vec(-0.1,-0.1,-0.1));
 
 		return new Scene().initAmbient(new Vec(0.0))
 				.initCamera(new Point(0.0, 6.0, 1.0), new Vec(0.0, -0.8, -0.2), new Vec(0, -0.5, 0.5), 2.0)
 				//.addLightSource(dirLight)
-				.addLightSource(pointLight)
-				//.addLightSource(spotLight)
+				//.addLightSource(pointLight)
+				.addLightSource(spotLight)
 				.addSurface(plainSurface).initName("scene1").initAntiAliasingFactor(1)
 				.initRenderRefarctions(true).initRenderReflections(true).initMaxRecursionLevel(3);
 	}

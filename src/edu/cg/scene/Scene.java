@@ -13,10 +13,7 @@ import java.util.stream.Collectors;
 
 import edu.cg.Logger;
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 import edu.cg.scene.camera.PinholeCamera;
 import edu.cg.scene.lightSources.Light;
 import edu.cg.scene.objects.Intersectable;
@@ -180,7 +177,7 @@ public class Scene {
 			//       super-sampling. You're also free to change the given implementation as you like.
 			Point centerPoint = camera.transform(x, y);
 			Ray ray = new Ray(camera.getCameraPosition(), centerPoint);
-			Vec color = calcColor(ray, 0);
+			Vec color = calcColor(ray, maxRecursionLevel );
 			return color.toColor();
 		});
 	}
@@ -188,7 +185,7 @@ public class Scene {
 	private Vec calcColor(Ray ray, int recusionLevel) {
 		// TODO: Implement this method.
 		//       This is the recursive method in RayTracing.
-        if(recusionLevel == 0) return new Vec();
+        if(recusionLevel <= 0) return new Vec();
 
      //   Comparator<Hit> comparator = Comparator.comparing( Hit::t );
        // surfaces.stream().filter(surface -> surface.intersect(ray) != null ).min( intersect(ray).t());
@@ -205,26 +202,39 @@ public class Scene {
 
         for (Light lightSource : lightSources) {
             Ray shadowRay = lightSource.rayToLight(pointOfClosestHit);
-            if(!surfaces.stream().allMatch(x -> lightSource.isOccludedBy(x, shadowRay))){
+            if(surfaces.stream().allMatch(x -> !lightSource.isOccludedBy(x, shadowRay))){
                 Vec calculateLightDependent = CalculateLightDependent(ray, minHit.getSurface(), minHit, shadowRay);
                 I.add(calculateLightDependent.mult(lightSource.intensity(pointOfClosestHit,shadowRay)));
             }
         }
 
-        Vec Ir = calcColor(null,recusionLevel - 1);
-        double kr = minHit.getSurface().reflectionIntensity();
+
+		Vec Ir = GetReflectionIntensity(ray, recusionLevel, minHit);
+		double kr = minHit.getSurface().reflectionIntensity();
         I.add(Ir.mult(kr));
 
-        Vec It = calcColor(null,recusionLevel - 1);
-        double kt = minHit.getSurface().isTransparent()? minHit.getSurface().refractionIntensity() : 0;
-        I.add(It.mult(kt));
+        if(minHit.getSurface().isTransparent()){
+			Vec It = GetRefractionIntensity(ray, recusionLevel, minHit);
+			double kt = minHit.getSurface().refractionIntensity();
+			I.add(It.mult(kt));
+		}
 
         return I;
+	}
 
+	private Vec GetRefractionIntensity(Ray ray, int recusionLevel, Hit minHit) {
+		Vec RefractionDirection = Ops.refract(ray.direction(), minHit.getNormalToSurface(), minHit.getSurface().n1(minHit), minHit.getSurface().n2(minHit) );
+		Ray RefractionRay = new Ray(ray.add(minHit.t()),RefractionDirection);
+		return calcColor(RefractionRay ,recusionLevel - 1);
+	}
+
+	private Vec GetReflectionIntensity(Ray ray, int recusionLevel, Hit minHit) {
+		Vec ReflectionDirection = Ops.reflect(ray.direction(), minHit.getNormalToSurface());
+		Ray ReflectionRay = new Ray(ray.add(minHit.t()),ReflectionDirection);
+		return calcColor(ReflectionRay,recusionLevel - 1);
 	}
 
 	public Hit getMinHit(Ray ray) {
-		//Find Closest hitting point
 		Hit minHit = null;
 		double minT = Double.MAX_EXPONENT;
 		for (Surface surface : surfaces) {

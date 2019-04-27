@@ -28,13 +28,13 @@ public class DirectionalLight extends Light {
 
 	@Override
 	public Ray rayToLight(Point fromPoint) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub done
 		return new Ray(fromPoint , direction.neg());
 	}
 
 	@Override
 	public boolean isOccludedBy(Surface surface, Ray rayToLight) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub done
         Hit hitSurface = surface.intersect(rayToLight);
         if( hitSurface != null ){
             return true;
@@ -44,7 +44,7 @@ public class DirectionalLight extends Light {
 
 	@Override
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub done
 		return new Vec(intensity);
 	}
 	

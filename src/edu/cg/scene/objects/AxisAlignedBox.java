@@ -1,10 +1,7 @@
 package edu.cg.scene.objects;
 
 import edu.cg.UnimplementedMethodException;
-import edu.cg.algebra.Hit;
-import edu.cg.algebra.Point;
-import edu.cg.algebra.Ray;
-import edu.cg.algebra.Vec;
+import edu.cg.algebra.*;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -67,9 +64,13 @@ public class AxisAlignedBox extends Shape {
 	@Override
 	public Hit intersect(Ray ray)
 	{
-		// TODO You need to implement thismethod. done
+		// TODO You need to implement. done
+		//https://tavianator.com/fast-branchless-raybounding-box-intersections/
+
 		double tmin = Double.NEGATIVE_INFINITY;
 		double tmax = Double.POSITIVE_INFINITY;
+
+		Hit hit = null;
 
 		if (ray.direction().x != 0.0) {
 			double tx1 = (minPoint.x - ray.source().x)/ ray.direction().x;
@@ -96,11 +97,23 @@ public class AxisAlignedBox extends Shape {
 
 		if (tmax >= tmin)
 		{
-			Point hitPoint = ray.source().add(tmin , ray.direction());
-			return new Hit(tmin , findNormalOnIntersectPoint(hitPoint));
+			Point hitPoint;
+
+			if(tmin < 0.0)  // source point is inside the AxisAlignedBox
+			{
+				hitPoint = ray.source().add(tmax , ray.direction());
+				hit = new Hit(tmax , findNormalOnIntersectPoint(hitPoint));
+				hit.setWithin();
+			}
+			else // source point is outside the AxisAlignedBox
+			{
+				 hitPoint = ray.source().add(tmin , ray.direction());
+				 hit = new Hit(tmin , findNormalOnIntersectPoint(hitPoint));
+				 hit.setOutside();
+			}
 		}
 
-			return null;
+			return hit;
 	}
 
 	public Vec findNormalOnIntersectPoint(Point IntersectPoint)

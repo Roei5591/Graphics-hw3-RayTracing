@@ -92,6 +92,7 @@ public class Sphere extends Shape {
 
 				// intersetionPoint = sourcePoint + t * directionVe
 				intersection = sourcePoint.add( directionVec.mult(t));
+
 				Vec normalToSphere = intersection.sub(center).normalize();
 				hit = new Hit(t,normalToSphere);
 				hit.setIsWithin(isWithin);

@@ -65,6 +65,8 @@ public class AxisAlignedBox extends Shape {
 	public Hit intersect(Ray ray)
 	{
 		// TODO You need to implement. done
+		//https://tavianator.com/fast-branchless-raybounding-box-intersections/
+
 		double tmin = Double.NEGATIVE_INFINITY;
 		double tmax = Double.POSITIVE_INFINITY;
 
@@ -99,7 +101,7 @@ public class AxisAlignedBox extends Shape {
 
 			if(tmin < 0.0)  // source point is inside the AxisAlignedBox
 			{
-				 hitPoint = ray.source().add(tmax , ray.direction());
+				hitPoint = ray.source().add(tmax , ray.direction());
 				hit = new Hit(tmax , findNormalOnIntersectPoint(hitPoint));
 				hit.setWithin();
 			}

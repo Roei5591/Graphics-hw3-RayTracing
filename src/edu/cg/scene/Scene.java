@@ -198,25 +198,26 @@ public class Scene {
 		//calculate it's color
         Vec I = new Vec();
         //I.add(Ie) TODO Ie
-        I.add(minHit.getSurface().Ka().mult(ambient)); //Ka* Iamb
+        I = I.add(minHit.getSurface().Ka().mult(ambient)); //Ka* Iamb
 
         for (Light lightSource : lightSources) {
             Ray shadowRay = lightSource.rayToLight(pointOfClosestHit);
             if(surfaces.stream().allMatch(x -> !lightSource.isOccludedBy(x, shadowRay))){
                 Vec calculateLightDependent = CalculateLightDependent(ray, minHit.getSurface(), minHit, shadowRay);
-                I.add(calculateLightDependent.mult(lightSource.intensity(pointOfClosestHit,shadowRay)));
+                I = I.add(calculateLightDependent.mult(lightSource.intensity(pointOfClosestHit,shadowRay)));
             }
         }
 
 
 		Vec Ir = GetReflectionIntensity(ray, recusionLevel, minHit);
 		double kr = minHit.getSurface().reflectionIntensity();
-        I.add(Ir.mult(kr));
+		Vec a = Ir.mult(kr);
+        I = I.add(a);
 
         if(minHit.getSurface().isTransparent()){
 			Vec It = GetRefractionIntensity(ray, recusionLevel, minHit);
 			double kt = minHit.getSurface().refractionIntensity();
-			I.add(It.mult(kt));
+			I = I.add(It.mult(kt));
 		}
 
         return I;

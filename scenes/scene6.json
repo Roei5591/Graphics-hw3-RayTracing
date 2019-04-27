@@ -1,0 +1,91 @@
+{
+  "name": "scene1",
+  "maxRecursionLevel": 3,
+  "antiAliasingFactor": 1,
+  "renderRefarctions": true,
+  "renderReflections": true,
+  "camera": {
+    "cameraPosition": {
+      "x": 0.0,
+      "y": 6.0,
+      "z": 100.0
+    },
+    "centerPoint": {
+      "x": 0.0,
+      "y": 4.4,
+      "z": 69.6
+    },
+    "towardsVec": {
+      "x": 0.0,
+      "y": -0.052558833122763673,
+      "z": -0.9986178293325096
+    },
+    "upVec": {
+      "x": 0.0,
+      "y": -0.5,
+      "z": 0.5
+    },
+    "rightVec": {
+      "x": -8.0,
+      "y": -0.0,
+      "z": 0.0
+    },
+    "UpHatVec": {
+      "x": 0.0,
+      "y": -121.6,
+      "z": 6.4
+    },
+    "distanceToPlain": 2.0,
+    "viewPlainWidth": 0.0,
+    "ratio": 0.0,
+    "imageResolution": 0,
+    "width": 0,
+    "height": 0
+  },
+  "ambient": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  },
+  "backgroundColor": {
+    "x": 0.0,
+    "y": 0.5,
+    "z": 1.0
+  },
+  "lightSources": [],
+  "surfaces": [
+    {
+      "shape": {
+        "CLASSNAME": "edu.cg.scene.objects.Plain",
+        "DATA": {
+          "a": 0.0,
+          "b": 0.0,
+          "c": 1.0,
+          "d": -0.0
+        }
+      },
+      "material": {
+        "Ka": {
+          "x": 0.2,
+          "y": 0.2,
+          "z": 0.2
+        },
+        "Kd": {
+          "x": 0.4,
+          "y": 0.4,
+          "z": 0.4
+        },
+        "Ks": {
+          "x": 0.4,
+          "y": 0.4,
+          "z": 0.4
+        },
+        "reflectionIntensity": 0.2,
+        "shininess": 10,
+        "isTransparent": false,
+        "refractionIntensity": 0.3,
+        "refractionIndex": 1.5
+      }
+    }
+  ]
+}

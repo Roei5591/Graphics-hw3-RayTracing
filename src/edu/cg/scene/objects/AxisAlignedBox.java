@@ -67,7 +67,7 @@ public class AxisAlignedBox extends Shape {
 	@Override
 	public Hit intersect(Ray ray)
 	{
-		// TODO You need to implement thismethod.
+		// TODO You need to implement thismethod. done
 		double tmin = Double.NEGATIVE_INFINITY;
 		double tmax = Double.POSITIVE_INFINITY;
 

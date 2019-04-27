@@ -46,13 +46,13 @@ public class PointLight extends Light {
 
 	@Override
 	public Ray rayToLight(Point fromPoint) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub done
 		return new Ray(fromPoint, position);
 	}
 
 	@Override
 	public boolean isOccludedBy(Surface surface, Ray rayToLight) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub done
 		Hit hitSurface = surface.intersect(rayToLight);
 		if( hitSurface != null && hitSurface.t() <  position.dist(rayToLight.source())){
 			return true;
@@ -62,12 +62,12 @@ public class PointLight extends Light {
 
 	@Override
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub done
 		double distance = position.dist(rayToLight.source());
 		double Fatt = kq * Math.pow(distance, 2) + kl * distance + kc;
 		Vec IL = intensity.mult(1.0 /Fatt);
 		return IL;
 	}
 
-	//TODO: add some methods
+	//TODO: add some methods done
 }

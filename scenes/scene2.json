@@ -11,9 +11,9 @@
       "z": 1.5
     },
     "centerPoint": {
-      "x": 1.9248566084017762,
-      "y": 1.9248566084017762,
-      "z": 0.877456982520533
+      "x": 1.0,
+      "y": 1.0,
+      "z": 0.6000000000000001
     },
     "towardsVec": {
       "x": -0.6917144638660746,
@@ -21,20 +21,26 @@
       "z": -0.20751433915982237
     },
     "upVec": {
-      "x": -0.14673479641335554,
-      "y": -0.14673479641335554,
-      "z": 0.978231976089037
+      "x": 0.0,
+      "y": 0.0,
+      "z": 1.0
     },
     "rightVec": {
-      "x": -0.7071067811865475,
-      "y": 0.7071067811865475,
+      "x": -1.0,
+      "y": 1.0,
       "z": 0.0
     },
-    "viewPlainWidth": 2.0,
+    "UpHatVec": {
+      "x": -0.3,
+      "y": -0.3,
+      "z": 2.0
+    },
     "distanceToPlain": 3.0,
-    "resX": 200.0,
-    "resY": 200.0,
-    "pixelRatio": 0.0
+    "viewPlainWidth": 0.0,
+    "ratio": 0.0,
+    "imageResolution": 0,
+    "width": 0,
+    "height": 0
   },
   "ambient": {
     "x": 1.0,
@@ -51,9 +57,9 @@
       "CLASSNAME": "edu.cg.scene.lightSources.DirectionalLight",
       "DATA": {
         "direction": {
-          "x": -0.5773502691896258,
-          "y": -0.5773502691896258,
-          "z": -0.5773502691896258
+          "x": -1.0,
+          "y": -1.0,
+          "z": -1.0
         },
         "intensity": {
           "x": 0.9,
@@ -102,7 +108,7 @@
   "surfaces": [
     {
       "shape": {
-        "CLASSNAME": "edu.cg.scene.objects.AxisAlignedRectangle",
+        "CLASSNAME": "edu.cg.scene.objects.AxisAlignedBox",
         "DATA": {
           "minPoint": {
             "x": 0.0,
@@ -114,7 +120,7 @@
             "y": 1.0,
             "z": 1.0
           },
-          "name": "Box 0"
+          "name": "Box 3"
         }
       },
       "material": {

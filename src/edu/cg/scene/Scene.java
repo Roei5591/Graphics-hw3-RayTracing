@@ -211,13 +211,13 @@ public class Scene {
             }
         }
 
-        //Vec Ir = calcColor(null,recusionLevel - 1);
-        //double kr = closestSurface.reflectionIntensity();
-        //I.add(Ir.mult(kr));
+        Vec Ir = calcColor(null,recusionLevel - 1);
+        double kr = minHit.getSurface().reflectionIntensity();
+        I.add(Ir.mult(kr));
 
-        //Vec It = calcColor(null,recusionLevel - 1);
-        //double kt = closestSurface.isTransparent()?closestSurface.refractionIntensity() :0;
-        //I.add(It.mult(kt));
+        Vec It = calcColor(null,recusionLevel - 1);
+        double kt = minHit.getSurface().isTransparent()? minHit.getSurface().refractionIntensity() : 0;
+        I.add(It.mult(kt));
 
         return I;
 

@@ -35,12 +35,23 @@ public class Sphere extends Shape {
 		return this;
 	}
 
+
+	public Hit intersect1(Ray ray)
+	{
+		return null;
+	}
+
+
+
+
+
 	@Override
 	public Hit intersect(Ray ray) {
 		// TODO: implement this method. done
 		Point sourcePoint = ray.source(); //p
 		Vec directionVec = ray.direction(); //d
-		Vec projectFromCenter = sourcePoint.sub(center);// pc
+		//Vec projectFromCenter = sourcePoint.sub(center);// p to c
+		Vec projectFromCenter = center.sub(sourcePoint);
 
 		//sourcePoint + (directionVec.projectFromCenter) * directionVec
 		//http://www.lighthouse3d.com/tutorials/maths/ray-sphere-intersection/
@@ -53,17 +64,17 @@ public class Sphere extends Shape {
 		double t;
 		Point intersection;
 
-		Vec sourceToCenterVec = sourcePoint.sub(center);  // this is the vector from p to c
+		//Vec projectFromCenter = sourcePoint.sub(center);  // this is the vector from p to c
 
-		if ( (sourceToCenterVec.dot(directionVec)) < 0) // when the sphere is behind the origin p
+		if ( (projectFromCenter.dot(directionVec)) < 0) // when the sphere is behind the origin p
 		{
-			if (sourceToCenterVec.length() == radius) // when source point is on the sphere
+			if (projectFromCenter.length() == radius) // when source point is on the sphere
 			{
 				intersection = sourcePoint;
 				Vec normalToSphere = intersection.sub(center).normalize();
 				hit = new Hit(0,normalToSphere);
 			}
-			else if ( sourceToCenterVec.length() < radius) //  when source point is inside the sphere
+			else if ( projectFromCenter.length() < radius) //  when source point is inside the sphere
 			{
 				t = dist - pc.dist(sourcePoint);
 				// intersetionPoint = sourcePoint + t * directionVe
@@ -79,7 +90,8 @@ public class Sphere extends Shape {
 			if (disOfRayFromCenter <= radius)
 			{
 				boolean isWithin;
-				if (sourceToCenterVec.length() > radius) // source point is outside the sphere
+
+				if (projectFromCenter.length() > radius) // source point is outside the sphere
 				{
 					t = sourcePoint.dist(pc) - dist;
 					isWithin = false;

@@ -5,6 +5,9 @@ import edu.cg.algebra.Point;
 import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class PinholeCamera {
 	//TODO Add your fields done
 	Point cameraPosition;
@@ -60,7 +63,6 @@ public class PinholeCamera {
 	 */
 	public Point transform(int x, int y)
 	{
-
 		this.ratio =  viewPlainWidth/width;
 
 		Point Pc = centerPoint;
@@ -73,6 +75,26 @@ public class PinholeCamera {
 
 		Point transformPoint = Pc.add(RightComponent.add(UpComponent));
 		return transformPoint;
+	}
+
+	public List<Point> transformAntiAliasingFactor(int x, int y , int antiAliasingFactor)
+	{
+
+		Point centerOfPixel = this.transform(x,y);
+
+		List<Point> Points = new LinkedList<Point>();
+		double r = ratio/4.0;
+		Vec moveUp = upVec.mult(r);
+		Vec moveDown = upVec.mult( -1 * r);
+		Vec moveRight = rightVec.mult(r);
+		Vec moveLeft = rightVec.mult(-1 * r);
+
+		Points.add(centerOfPixel.add(moveUp.add(moveRight)));
+		Points.add(centerOfPixel.add(moveUp.add(moveLeft)));
+		Points.add(centerOfPixel.add(moveDown.add(moveRight)));
+		Points.add(centerOfPixel.add(moveDown.add(moveLeft)));
+
+		return Points;
 	}
 
 	/**

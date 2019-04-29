@@ -72,48 +72,50 @@ public class AxisAlignedBox extends Shape {
 
 		Hit hit = null;
 
-		if (ray.direction().x != 0.0) {
-			double tx1 = (minPoint.x - ray.source().x)/ ray.direction().x;
-			double tx2 = (maxPoint.x - ray.source().x)/ ray.direction().x;
+		if(WillNeverMeet(ray)){
+			return null;
+		}
+
+		double tx1;
+		double tx2;
+		if(Math.abs(ray.direction().x) > Ops.epsilon){
+			tx1 = (minPoint.x - ray.source().x)/ ray.direction().x;
+			tx2 = (maxPoint.x - ray.source().x)/ ray.direction().x;
 			tmin = max(tmin, min(tx1, tx2));
 			tmax = min(tmax, max(tx1, tx2));
-		}
-
-		if (ray.direction().y != 0.0) {
-			double ty1 = (minPoint.y - ray.source().y)/ ray.direction().y;
-			double ty2 = (maxPoint.y - ray.source().y)/ ray.direction().y;
-
-			tmin = max(tmin, min(ty1, ty2));
-			tmax = min(tmax, max(ty1, ty2));
-		}
-
-		if (ray.direction().z != 0.0) {
-			double tz1 = (minPoint.z - ray.source().z)/ ray.direction().z;
-			double tz2 = (maxPoint.z - ray.source().z)/ ray.direction().z;
-
-			tmin = max(tmin, min(tz1, tz2));
-			tmax = min(tmax, max(tz1, tz2));
-		}
-
-		if (tmax >= tmin)
-		{
-			Point hitPoint;
-
-			if(tmin < 0.0)  // source point is inside the AxisAlignedBox
-			{
-				hitPoint = ray.source().add(tmax , ray.direction());
-				hit = new Hit(tmax , findNormalOnIntersectPoint(hitPoint));
-				hit.setWithin();
+			if(tmax < tmin || tmax < Ops.epsilon){
+				return null;
 			}
-			else // source point is outside the AxisAlignedBox
-			{
-				 hitPoint = ray.source().add(tmin , ray.direction());
-				 hit = new Hit(tmin , findNormalOnIntersectPoint(hitPoint));
-				 hit.setOutside();
+		}else{
+			//when ray direction is 0 we will meet at the beginning or never meet
+			if (Math.abs(ray.source().x - minPoint.x) > Ops.epsilon) {
+				tx1 = Ops.infinity;
+			}else{
+				tx1 = 0;
+			}
+
+			if (Math.abs(ray.source().x - maxPoint.x) > Ops.epsilon) {
+				tx2 = Ops.infinity;
+			}else{
+				tx2 = 0;
 			}
 		}
+		return null;
+	}
 
-			return hit;
+	private boolean WillNeverMeet(Ray ray) {
+		double[] raySource = ray.source().asArray();
+		double[] rayDirection = ray.direction().asArray();
+		double[] minPoint = this.minPoint.asArray();
+		double[] maxPoint = this.maxPoint.asArray();
+		for (int i = 0; i < 3; i++) {
+			if (Math.abs(rayDirection[i]) <= Ops.epsilon) {
+				if (raySource[i] < minPoint[i] || raySource[i] > maxPoint[i]) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -198,6 +200,9 @@ public class AxisAlignedBox extends Shape {
 		}
 		return null;
 	}
+
+
+
 	public Vec findNormalOnIntersectPoint(Point IntersectPoint)
 	{
 		Vec normalOnIntersectPoint = null;

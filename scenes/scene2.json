@@ -30,11 +30,11 @@
       "y": 0.7071067811865475,
       "z": 0.0
     },
-    "distanceToPlain": 3.0,
     "viewPlainWidth": 2.0,
-    "ratio": 0.0,
-    "width": 200.0,
-    "height": 200.0
+    "distanceToPlain": 3.0,
+    "resX": 200.0,
+    "resY": 200.0,
+    "pixelRatio": 0.0
   },
   "ambient": {
     "x": 1.0,

@@ -118,6 +118,74 @@ public class AxisAlignedBox extends Shape {
 		return false;
 	}
 
+	//@Override
+	public Hit intersect22(final Ray ray)
+	{
+
+		if(ray.direction().x == Double.NaN)
+		{
+			System.out.println("NABA");
+		}
+		double t1;
+		double t2;
+		double tmin = -Ops.infinity;
+		double tmax = Ops.infinity;
+		double[] sourcePoint = ray.source().asArray();
+		double[] direction = ray.direction().asArray();
+		double[] minPoint = this.minPoint.asArray();
+		double[] maxPoint = this.maxPoint.asArray();
+
+		for (int i = 0; i < 3; ++i)
+		{
+			if (Math.abs(direction[i]) > Ops.epsilon)
+			{
+				if(Math.abs(minPoint[i] - sourcePoint[i]) == Ops.epsilon || Math.abs(maxPoint[i] - sourcePoint[i]) == Ops.epsilon)
+				{
+					System.out.println("WTFFFFFFFF");
+				}
+
+				t1 = (minPoint[i] - sourcePoint[i]) / direction[i];
+				t2 = (maxPoint[i] - sourcePoint[i]) / direction[i];
+
+
+				tmin = max(tmin, min(t1, t2));
+				tmax = min(tmax, max(t1, t2));
+
+				if (tmax < tmin || tmax < Ops.epsilon)
+				{
+					return null;
+				}
+
+			}
+			else
+				{
+					if (sourcePoint[i] < minPoint[i] || sourcePoint[i] > maxPoint[i])
+					{
+						return null;
+					}
+				}
+		}
+
+		Hit hit;
+		Vec norm;
+
+		if (tmin < Ops.epsilon) //inside
+		{
+			norm = this.normal(ray.add(tmax));
+			hit = new Hit(tmax , norm);
+			hit.setWithin();
+
+		}
+		else //outside
+		{
+			norm = this.normal(ray.add(tmin));
+			hit = new Hit(tmin , norm);
+			hit.setOutside();
+		}
+
+		return hit;
+	}
+
 	@Override
 	public Hit intersect(final Ray ray) {
 		double tNear = -1.0E8;
@@ -126,45 +194,42 @@ public class AxisAlignedBox extends Shape {
 		final double[] rayD = ray.direction().asArray();
 		final double[] minP = this.minPoint.asArray();
 		final double[] maxP = this.maxPoint.asArray();
-		for (int i = 0; i < 3; ++i) {
+		for (int i = 0; i < 3; ++i)
+		{
 			if (Math.abs(rayD[i]) <= 1.0E-5) {
-				if (rayP[i] < minP[i] || rayP[i] > maxP[i]) {
+				if (rayP[i] < minP[i] || rayP[i] > maxP[i])
+				{
 					return null;
 				}
 			}
 			else {
-				double t1 = findIntersectionParameter(rayD[i], rayP[i], minP[i]);
-				double t2 = findIntersectionParameter(rayD[i], rayP[i], maxP[i]);
-				if (t1 > t2) {
-					final double tmp = t1;
-					t1 = t2;
-					t2 = tmp;
-				}
-				if (Double.isNaN(t1) || Double.isNaN(t2)) {
+				double t1 = (minP[i] - rayP[i]) / rayD[i];
+				double t2 = (maxP[i] - rayP[i]) / rayD[i];
+
+				if (Double.isNaN(t1) || Double.isNaN(t2))
+				{
 					return null;
 				}
-				if (t1 > tNear) {
-					tNear = t1;
-				}
-				if (t2 < tFar) {
-					tFar = t2;
-				}
+
+				tNear = max(tNear, min(t1, t2));
+				tFar = min(tFar, max(t1, t2));
+
 				if (tNear > tFar || tFar < 1.0E-5) {
 					return null;
 				}
 			}
 		}
-		double minT = tNear;
-		boolean isWithin = false;
-		if (minT < 1.0E-5) {
-			isWithin = true;
-			minT = tFar;
+
+		if (tNear < 1.0E-5)
+		{
+			return new Hit(tFar, this.normal(ray.add(tFar)).neg()).setWithin();
 		}
-		Vec norm = this.normal(ray.add(minT));
-		if (isWithin) {
-			norm = norm.neg();
+		else
+		{
+			return new Hit(tNear, this.normal(ray.add(tNear)));
 		}
-		return new Hit(minT, norm).setIsWithin(isWithin);
+
+
 	}
 
 	private static double findIntersectionParameter(final double a, final double b, final double c) {

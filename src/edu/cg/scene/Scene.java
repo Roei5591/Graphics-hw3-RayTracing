@@ -175,10 +175,25 @@ public class Scene {
 		return executor.submit(() -> {
 			// TODO: You need to re-implement this method if you want to handle
 			//       super-sampling. You're also free to change the given implementation as you like.
-			Point centerPoint = camera.transform(x, y);
-			Ray ray = new Ray(camera.getCameraPosition(), centerPoint);
-			Vec color = calcColor(ray, maxRecursionLevel );
-
+			Vec color = new Vec();
+			if(antiAliasingFactor == 1){
+				Point centerPoint = camera.transform(x, y);
+				Ray ray = new Ray(camera.getCameraPosition(), centerPoint);
+				color = calcColor(ray, maxRecursionLevel );
+			}else{
+				List<Vec> colors = new LinkedList<>();
+				List<Point> Points = camera.transformAntiAliasingFactor(x, y , antiAliasingFactor);
+				for (Point point :Points ) {
+					Ray ray = new Ray(camera.getCameraPosition(), point);
+					colors.add(calcColor(ray, maxRecursionLevel ));
+				}
+				for (Vec vector : colors) {
+					color = color.add(vector);
+				}
+				color.x =  color.x / Math.pow(antiAliasingFactor, 2);
+				color.y =  color.y / Math.pow(antiAliasingFactor, 2);
+				color.z =  color.z / Math.pow(antiAliasingFactor, 2);
+			}
 			return color.toColor();
 		});
 	}

@@ -77,7 +77,14 @@ public class PinholeCamera {
 		return transformPoint;
 	}
 
-	public List<Point> transformAntiAliasingFactor(int x, int y , int antiAliasingFactor)
+	/**
+	 * Transforms from pixel coordinates to the a list of points of the corresponding pixel in model coordinates.
+	 * @param x - the index of the x direction of the pixel.
+	 * @param y - the index of the y direction of the pixel.
+	 * @param antiAliasingFactor - the index of the y direction of the pixel.
+	 * @return the middle point of the pixel (x,y) in the model coordinates.
+	 */
+	public List<Point> transformAntiAliasing(int x, int y , int antiAliasingFactor)
 	{
 
 		Point centerOfPixel = this.transform(x,y);

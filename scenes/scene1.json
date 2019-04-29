@@ -12,8 +12,8 @@
     },
     "centerPoint": {
       "x": 0.0,
-      "y": 4.4,
-      "z": 0.6
+      "y": 4.059714999709336,
+      "z": 0.5149287499273341
     },
     "towardsVec": {
       "x": 0.0,
@@ -26,21 +26,20 @@
       "z": 0.5
     },
     "rightVec": {
-      "x": -0.5,
+      "x": -1.0,
       "y": -0.0,
       "z": 0.0
     },
     "UpHatVec": {
       "x": 0.0,
-      "y": -0.1,
-      "z": 0.4
+      "y": -0.24253562503633297,
+      "z": 0.9701425001453319
     },
     "distanceToPlain": 2.0,
-    "viewPlainWidth": 0.0,
+    "viewPlainWidth": 2.0,
     "ratio": 0.0,
-    "imageResolution": 0,
-    "width": 0,
-    "height": 0
+    "width": 200.0,
+    "height": 200.0
   },
   "ambient": {
     "x": 0.0,

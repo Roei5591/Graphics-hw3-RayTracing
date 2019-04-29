@@ -61,10 +61,10 @@ public class AxisAlignedBox extends Shape {
 		return this;
 	}
 
-	@Override
-	public Hit intersect(Ray ray)
+	//@Override
+	public Hit intersect2(Ray ray)
 	{
-		// TODO You need to implement. done
+		//// TODO You need to implement. done
 		//https://tavianator.com/fast-branchless-raybounding-box-intersections/
 
 		double tmin = Double.NEGATIVE_INFINITY;
@@ -116,6 +116,88 @@ public class AxisAlignedBox extends Shape {
 			return hit;
 	}
 
+	@Override
+	public Hit intersect(final Ray ray) {
+		double tNear = -1.0E8;
+		double tFar = 1.0E8;
+		final double[] rayP = ray.source().asArray();
+		final double[] rayD = ray.direction().asArray();
+		final double[] minP = this.minPoint.asArray();
+		final double[] maxP = this.maxPoint.asArray();
+		for (int i = 0; i < 3; ++i) {
+			if (Math.abs(rayD[i]) <= 1.0E-5) {
+				if (rayP[i] < minP[i] || rayP[i] > maxP[i]) {
+					return null;
+				}
+			}
+			else {
+				double t1 = findIntersectionParameter(rayD[i], rayP[i], minP[i]);
+				double t2 = findIntersectionParameter(rayD[i], rayP[i], maxP[i]);
+				if (t1 > t2) {
+					final double tmp = t1;
+					t1 = t2;
+					t2 = tmp;
+				}
+				if (Double.isNaN(t1) || Double.isNaN(t2)) {
+					return null;
+				}
+				if (t1 > tNear) {
+					tNear = t1;
+				}
+				if (t2 < tFar) {
+					tFar = t2;
+				}
+				if (tNear > tFar || tFar < 1.0E-5) {
+					return null;
+				}
+			}
+		}
+		double minT = tNear;
+		boolean isWithin = false;
+		if (minT < 1.0E-5) {
+			isWithin = true;
+			minT = tFar;
+		}
+		Vec norm = this.normal(ray.add(minT));
+		if (isWithin) {
+			norm = norm.neg();
+		}
+		return new Hit(minT, norm).setIsWithin(isWithin);
+	}
+
+	private static double findIntersectionParameter(final double a, final double b, final double c) {
+		if (Math.abs(a) < 1.0E-5 && Math.abs(b - c) > 1.0E-5) {
+			return 1.0E8;
+		}
+		if (Math.abs(a) < 1.0E-5 && Math.abs(b - c) < 1.0E-5) {
+			return 0.0;
+		}
+		final double t = (c - b) / a;
+		return t;
+	}
+
+
+	private Vec normal(final Point p) {
+		if (Math.abs(p.z - this.minPoint.z) <= 1.0E-5) {
+			return new Vec(0.0, 0.0, -1.0);
+		}
+		if (Math.abs(p.z - this.maxPoint.z) <= 1.0E-5) {
+			return new Vec(0.0, 0.0, 1.0);
+		}
+		if (Math.abs(p.y - this.minPoint.y) <= 1.0E-5) {
+			return new Vec(0.0, -1.0, 0.0);
+		}
+		if (Math.abs(p.y - this.maxPoint.y) <= 1.0E-5) {
+			return new Vec(0.0, 1.0, 0.0);
+		}
+		if (Math.abs(p.x - this.minPoint.x) <= 1.0E-5) {
+			return new Vec(-1.0, 0.0, 0.0);
+		}
+		if (Math.abs(p.x - this.maxPoint.x) <= 1.0E-5) {
+			return new Vec(1.0, 0.0, 0.0);
+		}
+		return null;
+	}
 	public Vec findNormalOnIntersectPoint(Point IntersectPoint)
 	{
 		Vec normalOnIntersectPoint = null;

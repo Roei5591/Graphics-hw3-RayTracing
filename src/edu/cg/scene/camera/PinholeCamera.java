@@ -2,6 +2,7 @@ package edu.cg.scene.camera;
 
 import edu.cg.algebra.Ops;
 import edu.cg.algebra.Point;
+import edu.cg.algebra.Ray;
 import edu.cg.algebra.Vec;
 
 public class PinholeCamera {
@@ -11,13 +12,11 @@ public class PinholeCamera {
 	Vec towardsVec;
 	Vec upVec;
 	Vec rightVec;
-	Vec UpHatVec;
 	double distanceToPlain;
 	double viewPlainWidth;
 	double ratio;
-	int imageResolution;
-	int width;
-	int height;
+	double width;
+	double height;
 	/**
 	 * Initializes a pinhole camera model with default resolution 200X200 (RxXRy) and image width 2.
 	 * @param cameraPosition - The position of the camera.
@@ -30,11 +29,13 @@ public class PinholeCamera {
 		// TODO: Initialize your fields done
 		this.cameraPosition = cameraPosition;
 		this.towardsVec = towardsVec.normalize();
-		this.upVec = upVec;
 		this.distanceToPlain = distanceToPlain;
-		this.centerPoint = Ops.add(cameraPosition , Ops.mult(distanceToPlain , towardsVec));
-		this.rightVec = Ops.cross(towardsVec , upVec);
-		this.UpHatVec = Ops.cross(rightVec , towardsVec);
+		this.centerPoint = new Ray(cameraPosition, towardsVec).add(distanceToPlain);
+		this.rightVec = towardsVec.cross(upVec).normalize();
+		this.upVec = rightVec.cross(towardsVec).normalize();
+		this.width = 200.0;
+		this.height = 200.0;
+		this.viewPlainWidth = 2.0;
 	}
 	/**
 	 * Initializes the resolution and width of the image.
@@ -47,7 +48,6 @@ public class PinholeCamera {
 		//TODO: init your fields done
 		this.width = width;
 		this.height = height;
-		imageResolution = height*width;
 		this.viewPlainWidth = viewPlainWidth;
 		this.ratio =  viewPlainWidth/width;
 	}
@@ -60,8 +60,18 @@ public class PinholeCamera {
 	 */
 	public Point transform(int x, int y)
 	{
-		Vec transformVec = Ops.add( rightVec.mult( (x - Math.floor(width/2)) * ratio) , UpHatVec.mult( - (y - Math.floor(height/2)) * ratio) );
-		Point transformPoint = centerPoint.add(transformVec);
+
+		this.ratio =  viewPlainWidth/width;
+
+		Point Pc = centerPoint;
+
+		double RightScalar = x - Math.floor(width/2.0);
+		Vec RightComponent = rightVec.mult(RightScalar * ratio);
+
+		double UpScalar = -1 * (y - Math.floor(height/2.0));
+		Vec UpComponent = upVec.mult(UpScalar * ratio);
+
+		Point transformPoint = Pc.add(RightComponent.add(UpComponent));
 		return transformPoint;
 	}
 
@@ -70,6 +80,7 @@ public class PinholeCamera {
 	 * @return a "new" point representing the camera position.
 	 */
 	public Point getCameraPosition() {
+		//return new Point(this.cameraPosition.x, this.cameraPosition.y, this.cameraPosition.z);
 		return cameraPosition;
 	}
 }

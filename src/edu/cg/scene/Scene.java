@@ -182,7 +182,7 @@ public class Scene {
 				color = calcColor(ray, maxRecursionLevel );
 			}else{
 				List<Vec> colors = new LinkedList<>();
-				List<Point> Points = camera.transformAntiAliasingFactor(x, y , antiAliasingFactor);
+				List<Point> Points = camera.transformAntiAliasing(x, y , antiAliasingFactor);
 				for (Point point :Points ) {
 					Ray ray = new Ray(camera.getCameraPosition(), point);
 					colors.add(calcColor(ray, maxRecursionLevel ));

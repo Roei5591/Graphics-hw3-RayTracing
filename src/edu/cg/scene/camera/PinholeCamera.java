@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PinholeCamera {
-	//TODO Add your fields done
 	Point cameraPosition;
 	Point centerPoint;
 	Vec towardsVec;
@@ -29,7 +28,6 @@ public class PinholeCamera {
 	 *
 	 */
 	public PinholeCamera(Point cameraPosition, Vec towardsVec, Vec upVec, double distanceToPlain) {
-		// TODO: Initialize your fields done
 		this.cameraPosition = cameraPosition;
 		this.towardsVec = towardsVec.normalize();
 		this.distanceToPlain = distanceToPlain;
@@ -48,7 +46,6 @@ public class PinholeCamera {
 	 */
 	public void initResolution(int height, int width, double viewPlainWidth)
 	{
-		//TODO: init your fields done
 		this.width = width;
 		this.height = height;
 		this.viewPlainWidth = viewPlainWidth;
@@ -78,31 +75,32 @@ public class PinholeCamera {
 	}
 
 	/**
-	 * Transforms from pixel coordinates to the a list of points of the corresponding pixel in model coordinates.
+	 * Transforms from pixel coordinates to a list of points of the corresponding pixel in model coordinates for Super sampling.
 	 * @param x - the index of the x direction of the pixel.
 	 * @param y - the index of the y direction of the pixel.
 	 * @param antiAliasingFactor - the index of the y direction of the pixel.
-	 * @return the middle point of the pixel (x,y) in the model coordinates.
+	 * @return a loist of points around thr middle point of the pixel (x,y) in the model coordinates for Super sampling.
 	 */
 	public List<Point> transformAntiAliasing(int x, int y , int antiAliasingFactor)
 	{
 
-		Point centerOfPixel = this.transform(x,y);
+		Point centerOfPixel = this.transform(x,y); // middle point
 
 		List<Point> points = new LinkedList<Point>();
-		double r;
+		double transformFactor;
+
 		if(antiAliasingFactor == 2) {
-			r = ratio / 4.0;
+			transformFactor = ratio / 4.0;
 		}
 		else
 		{
-			r = ratio/3.0;
+			transformFactor = ratio/3.0;
 		}
 
-		Vec moveUp = upVec.mult(r);
-		Vec moveDown = upVec.mult( -1 * r);
-		Vec moveRight = rightVec.mult(r);
-		Vec moveLeft = rightVec.mult(-1 * r);
+		Vec moveUp = upVec.mult(transformFactor);
+		Vec moveDown = upVec.mult( -1 * transformFactor);
+		Vec moveRight = rightVec.mult(transformFactor);
+		Vec moveLeft = rightVec.mult(-1 * transformFactor);
 
 		points.add(centerOfPixel.add(moveUp.add(moveRight)));
 		points.add(centerOfPixel.add(moveUp.add(moveLeft)));

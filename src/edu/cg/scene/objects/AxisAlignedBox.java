@@ -120,27 +120,27 @@ public class AxisAlignedBox extends Shape {
 	{
 		Vec normalOnIntersectPoint = null;
 
-		if(IntersectPoint.x == minPoint.x)
+		if(Math.abs(IntersectPoint.x - minPoint.x) < Ops.epsilon)
 		{
 			normalOnIntersectPoint = new Vec(-1 ,0 ,0);
 		}
-		else if(IntersectPoint.x == maxPoint.x)
+		else if(Math.abs(IntersectPoint.x - maxPoint.x) < Ops.epsilon)
 		{
 			normalOnIntersectPoint = new Vec(1 ,0 ,0);
 		}
-		else if(IntersectPoint.y == minPoint.y)
+		else if(Math.abs(IntersectPoint.y - minPoint.y) < Ops.epsilon)
 		{
 			normalOnIntersectPoint = new Vec( 0,-1 ,0);
 		}
-		else if(IntersectPoint.y == maxPoint.y)
+		else if(Math.abs(IntersectPoint.y - maxPoint.y) < Ops.epsilon)
 		{
 			normalOnIntersectPoint = new Vec(0 ,1 ,0);
 		}
-		else if(IntersectPoint.z == minPoint.z)
+		else if(Math.abs(IntersectPoint.z - minPoint.z) < Ops.epsilon)
 		{
 			normalOnIntersectPoint = new Vec(0 ,0 ,-1);
 		}
-		else if(IntersectPoint.z == maxPoint.z)
+		else if(Math.abs(IntersectPoint.z - maxPoint.z) < Ops.epsilon)
 		{
 			normalOnIntersectPoint = new Vec(0 ,0 ,1);
 		}

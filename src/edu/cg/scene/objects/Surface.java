@@ -28,7 +28,6 @@ public class Surface implements Intersectable {
 	
 	@Override
 	public Hit intersect(Ray ray) {
-		//TODO: implement this method. done
 		Hit hit =  shape.intersect(ray);
 		if(hit != null)
 		{

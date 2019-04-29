@@ -34,12 +34,13 @@ public class Sphere extends Shape {
 
     @Override
     public Hit intersect(Ray ray) {
-        // TODO: implement this method.
         double a = 1;
         double b = ray.direction().mult(2.0).dot(ray.source().sub(center));
         double c = ray.source().distSqr(center) - Math.pow(radius, 2);
         double delta = Math.pow(b, 2) - (4 * a * c) ;
-        if(delta < 0) return null;
+        if(delta < 0) {
+            return null;
+        }
         if(delta == 0){
             double t = -b / ( 2 * a);
             if(t < Ops.epsilon || t > Ops.infinity){

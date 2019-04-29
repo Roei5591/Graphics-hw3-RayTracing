@@ -122,16 +122,12 @@ public class Scene {
 	
 	private void initSomeFields(int imgWidth, int imgHeight, Logger logger) {
 		this.logger = logger;
-		//TODO: initialize your additional field here.
-		//      You can also change the method signature if needed.
 	}
 	
 	
 	public BufferedImage render(int imgWidth, int imgHeight, double viewPlainWidth,Logger logger)
 			throws InterruptedException, ExecutionException {
-		// TODO: Please notice the following comment.
-		// This method is invoked each time Render Scene button is invoked.
-		// Use it to initialize additional fields you need.
+
 		initSomeFields(imgWidth, imgHeight, logger);
 		
 		BufferedImage img = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_RGB);
@@ -173,8 +169,6 @@ public class Scene {
 	
 	private Future<Color> calcColor(int x, int y) {
 		return executor.submit(() -> {
-			// TODO: You need to re-implement this method if you want to handle
-			//       super-sampling. You're also free to change the given implementation as you like.
 			Vec color = new Vec();
 			if(antiAliasingFactor == 1){
 				Point centerPoint = camera.transform(x, y);
@@ -199,13 +193,9 @@ public class Scene {
 	}
 	
 	private Vec calcColor(Ray ray, int recusionLevel) {
-		// TODO: Implement this method.
-		//       This is the recursive method in RayTracing.
+
         if(recusionLevel <= 0) return new Vec();
 
-     //   Comparator<Hit> comparator = Comparator.comparing( Hit::t );
-       // surfaces.stream().filter(surface -> surface.intersect(ray) != null ).min( intersect(ray).t());
-        //TODO good to have - make lambda instead of code
 		Hit minHit = getMinHit(ray);
 
 		if(minHit == null) return backgroundColor;
@@ -213,7 +203,6 @@ public class Scene {
 
 		//calculate it's color
         Vec I = new Vec();
-        //I.add(Ie) TODO Ie
         Vec a = minHit.getSurface().Ka();
         Vec b = a.mult(ambient);
         I = I.add(b); //Ka* Iamb

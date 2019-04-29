@@ -34,11 +34,9 @@ public class Spotlight extends PointLight {
 	public Spotlight initDecayFactors(double q, double l, double c) {
 		return (Spotlight)super.initDecayFactors(q, l, c);
 	}
-	
-	//TODO: add some methods
+
 	@Override
 	public Vec intensity(Point hittingPoint, Ray rayToLight) {
-		// TODO Auto-generated method stub done
 		double distance = position.dist(rayToLight.source());
 		double Fatt =getFatt(distance);
 		double VVd = direction.dot(rayToLight.direction().neg());

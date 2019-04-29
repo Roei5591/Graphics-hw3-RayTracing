@@ -65,21 +65,16 @@ public class AxisAlignedBox extends Shape {
 	public Hit intersect(final Ray ray) {
 		double tMin = -1 * Ops.infinity;
 		double tMax = Ops.infinity;
-		final double[] rayPoint = ray.source().asArray();
-		final double[] rayDirection = ray.direction().asArray();
-		final double[] minP = this.minPoint.asArray();
-		final double[] maxP = this.maxPoint.asArray();
+		final double[] sourcePoint = ray.source().asArray();
+		final double[] direction = ray.direction().asArray();
+		final double[] minPoint = this.minPoint.asArray();
+		final double[] maxPoint = this.maxPoint.asArray();
 		for (int i = 0; i < 3; i++)
 		{
-			if (Math.abs(rayDirection[i]) <= Ops.epsilon) {
-				if (rayPoint[i] < minP[i] || rayPoint[i] > maxP[i])
-				{
-					return null;
-				}
-			}
-			else {
-				double t1 = (minP[i] - rayPoint[i]) / rayDirection[i];
-				double t2 = (maxP[i] - rayPoint[i]) / rayDirection[i];
+			if (Math.abs(direction[i]) > Ops.epsilon)
+			{
+				double t1 = (minPoint[i] - sourcePoint[i]) / direction[i];
+				double t2 = (maxPoint[i] - sourcePoint[i]) / direction[i];
 
 				if (Double.isNaN(t1) || Double.isNaN(t2))
 				{
@@ -92,7 +87,15 @@ public class AxisAlignedBox extends Shape {
 				if (tMin > tMax || tMax < Ops.epsilon) {
 					return null;
 				}
+
 			}
+			else
+				{
+					if (sourcePoint[i] < minPoint[i] || sourcePoint[i] > maxPoint[i])
+					{
+						return null;
+					}
+				}
 		}
 
 		return tMin < Ops.epsilon ?

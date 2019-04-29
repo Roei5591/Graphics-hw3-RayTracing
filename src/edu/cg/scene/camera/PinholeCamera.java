@@ -82,19 +82,36 @@ public class PinholeCamera {
 
 		Point centerOfPixel = this.transform(x,y);
 
-		List<Point> Points = new LinkedList<Point>();
-		double r = ratio/4.0;
+		List<Point> points = new LinkedList<Point>();
+		double r;
+		if(antiAliasingFactor == 2) {
+			r = ratio / 4.0;
+		}
+		else
+		{
+			r = ratio/3.0;
+		}
+
 		Vec moveUp = upVec.mult(r);
 		Vec moveDown = upVec.mult( -1 * r);
 		Vec moveRight = rightVec.mult(r);
 		Vec moveLeft = rightVec.mult(-1 * r);
 
-		Points.add(centerOfPixel.add(moveUp.add(moveRight)));
-		Points.add(centerOfPixel.add(moveUp.add(moveLeft)));
-		Points.add(centerOfPixel.add(moveDown.add(moveRight)));
-		Points.add(centerOfPixel.add(moveDown.add(moveLeft)));
+		points.add(centerOfPixel.add(moveUp.add(moveRight)));
+		points.add(centerOfPixel.add(moveUp.add(moveLeft)));
+		points.add(centerOfPixel.add(moveDown.add(moveRight)));
+		points.add(centerOfPixel.add(moveDown.add(moveLeft)));
 
-		return Points;
+		if(antiAliasingFactor == 3)
+		{
+			points.add(centerOfPixel);
+			points.add(centerOfPixel.add(moveUp));
+			points.add(centerOfPixel.add(moveDown));
+			points.add(centerOfPixel.add(moveRight));
+			points.add(centerOfPixel.add(moveLeft));
+		}
+
+		return points;
 	}
 
 	/**
